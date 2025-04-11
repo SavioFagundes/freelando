@@ -16,6 +16,10 @@ public class FreelandoContext : DbContext
     public FreelandoContext(DbContextOptions<FreelandoContext> options) : base(options)
     {
     }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(FreelandoContext).Assembly);
+    }
 
     override protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

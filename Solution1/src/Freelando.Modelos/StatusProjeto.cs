@@ -4,6 +4,6 @@ public enum StatusProjeto
     Disponivel,
     Pausado,
     Concluido,
-    Cancelado
-
+    Cancelado,
+    EmAndamento
 }
