@@ -1,4 +1,4 @@
-using Freelando.Modelo;
+using Freelando.Modelos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,6 +10,7 @@ internal class CandidaturaTypeConfiguration : IEntityTypeConfiguration<Candidatu
     {
         entity.ToTable("TB_Candidaturas");
         entity.Property(e => e.Id).HasColumnName("Id_Candidatura");
+        entity.Property(e => e.ServicoId).HasColumnName("Id_Servico");
         entity.Property(e => e.ValorProposto).HasColumnName("Valor_Proposto");
         entity.Property(e => e.DescricaoProposta).HasColumnName("DS_Proposta");
         entity
@@ -25,5 +26,8 @@ internal class CandidaturaTypeConfiguration : IEntityTypeConfiguration<Candidatu
                 fromObj => fromObj.ToString(),
                 fromDb => (StatusCandidatura)Enum.Parse(typeof(StatusCandidatura), fromDb)
             );
+        entity.HasOne(e => e.Servico)
+            .WithMany(e => e.Candidaturas)
+            .HasForeignKey(e => e.ServicoId);
     }
 }

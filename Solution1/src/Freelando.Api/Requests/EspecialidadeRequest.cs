@@ -1,3 +1,5 @@
-﻿namespace Freelando.Api.Requests;
+﻿using Freelando.Modelos;
 
-public record EspecialidadeRequest(Guid Id, string? Descricao);
+namespace Freelando.Api.Requests;
+
+public record EspecialidadeRequest(Guid Id, string? Descricao, ICollection<ProjetoRequest> Projetos, ICollection<ProfissionalRequest> Profissionais);

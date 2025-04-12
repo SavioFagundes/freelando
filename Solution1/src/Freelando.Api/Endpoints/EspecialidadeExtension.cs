@@ -1,5 +1,5 @@
 ﻿using Freelando.Dados;
-using Freelando.Modelo;
+using Freelando.Modelos;
 using Microsoft.EntityFrameworkCore;
 using Freelando.Api.Converters;
 using Microsoft.AspNetCore.Mvc;

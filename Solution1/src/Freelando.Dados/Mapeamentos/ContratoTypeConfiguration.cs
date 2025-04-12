@@ -1,4 +1,4 @@
-﻿using Freelando.Modelo;
+﻿using Freelando.Modelos;
  using Microsoft.EntityFrameworkCore.Metadata.Builders;
  using Microsoft.EntityFrameworkCore;
  using System;
@@ -14,11 +14,18 @@
      {
          entity.ToTable("TB_Contratos");
          entity.Property(e => e.Id).HasColumnName("Id_Contrato");
+         entity.Property(e => e.ProfissionalId).HasColumnName("ID_Profissional");
          entity.OwnsOne(e => e.Vigencia, vigencia =>
          {
              vigencia.Property(v => v.DataInicio).HasColumnName("Data_Inicio");
              vigencia.Property(v => v.DataEncerramento).HasColumnName("Data_Encerramento");
          });
- 
+        entity.Property(e => e.ServicoId).HasColumnName("Id_Servico");
+        entity.HasOne(e => e.Servico)
+            .WithOne(e => e.Contrato)
+            .HasForeignKey<Servico>(e => e.Id);
+        entity.HasOne(e => e.Profissional)
+            .WithMany(e => e.Contratos)
+            .HasForeignKey(e => e.ProfissionalId);
      }
  }

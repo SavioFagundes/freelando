@@ -1,4 +1,4 @@
-using Freelando.Modelo;
+using Freelando.Modelos;
  using Microsoft.EntityFrameworkCore.Metadata.Builders;
  using Microsoft.EntityFrameworkCore;
  using System;

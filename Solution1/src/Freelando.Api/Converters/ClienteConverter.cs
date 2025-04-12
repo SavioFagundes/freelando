@@ -1,13 +1,16 @@
 ﻿using Freelando.Api.Requests;
 using Freelando.Api.Responses;
-using Freelando.Modelo;
+using Freelando.Modelos;
  
 namespace Freelando.Api.Converters;
 
 public class ClienteConverter
 {
+    private ProjetoConverter? _projetosConverter;
+
     public ClienteResponse EntityToResponse(Cliente? cliente)
     {
+        _projetosConverter = new ProjetoConverter();
 
         if (cliente == null)
         {
@@ -19,22 +22,9 @@ public class ClienteConverter
 
     public Cliente RequestToEntity(ClienteRequest? cliente)
     {
-        if (cliente == null) { 
-            return new Cliente { 
-                Id = Guid.Empty, 
-                Nome = "", 
-                Cpf = "", 
-                Email = "", 
-                Telefone = "" 
-            }; 
-        }
-        return new Cliente { 
-            Id = cliente.Id, 
-            Nome = cliente.Nome!, 
-            Cpf = cliente.Cpf!, 
-            Email = cliente.Email!, 
-            Telefone = cliente.Telefone! 
-        };
+        _projetosConverter = new ProjetoConverter();
+        if (cliente == null) { return new Cliente(Guid.Empty, "", "", "", "", new List<Projeto>()); }
+        return new Cliente(cliente.Id, cliente.Nome!, cliente.Cpf!, cliente.Email!, cliente.Telefone!, _projetosConverter.RequestListToEntityList(cliente.Projetos!));
     }
 
     public ICollection<ClienteResponse>? EntityListToResponseList(IEnumerable<Cliente>? clientes)

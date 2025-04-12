@@ -1,4 +1,4 @@
-﻿namespace Freelando.Modelo;
+﻿namespace Freelando.Modelos;
 public enum StatusProjeto
 {
     Disponivel,
