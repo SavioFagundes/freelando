@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Freelando.Api.Converters;
 using Microsoft.AspNetCore.Mvc;
 using Freelando.Api.Requests;
+using System.Linq.Expressions;
 namespace Freelando.Api.Endpoints;
 
 public static class EspecialidadeExtension
@@ -15,6 +16,24 @@ public static class EspecialidadeExtension
             var especialidades = converter.EntityListToResponseList(contexto.Especialidades.AsNoTracking().ToList());
             return Results.Ok(await Task.FromResult(especialidades));
         }).WithTags("Especialidade").WithOpenApi();
+
+        app.MapGet("/especialidades/{letraInicial}", async ([FromServices] EspecialidadeConverter converter, [FromServices] FreelandoContext contexto, string letraInicial) =>
+        {
+            Expression<Func<Especialidade, bool>> filtroexpression = null;
+            if(letraInicial.Length == 1 && char.IsUpper(letraInicial[0]))
+            {
+                filtroexpression = especialidade => especialidade.Descricao.StartsWith(letraInicial);
+            }
+            IQueryable<Especialidade> especialidades = contexto.Especialidades;
+            if(filtroexpression != null)
+            {
+                especialidades = especialidades.Where(filtroexpression);
+            }
+            return await especialidades.ToListAsync();
+            
+            
+        }).WithTags("Especialidade").WithOpenApi();
+        
 
         app.MapPost("/especialidades", async ([FromServices] EspecialidadeConverter converter, [FromServices] FreelandoContext contexto, EspecialidadeRequest especialidadeRequest) =>
         {
