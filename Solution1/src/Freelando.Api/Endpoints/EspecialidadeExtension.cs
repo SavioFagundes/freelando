@@ -39,16 +39,40 @@ public static class EspecialidadeExtension
             return Results.Ok(especialidade);
         }).WithTags("Especialidade").WithOpenApi();
 
+        // app.MapDelete("/especialidade/{id}", async ([FromServices] EspecialidadeConverter converter, [FromServices] FreelandoContext contexto, Guid id) =>
+        // {
+        //     var especialidade = await contexto.Especialidades.FindAsync(id);
+        //     if (especialidade == null)
+        //     {
+        //         return Results.NotFound();
+        //     }
+        //     contexto.Especialidades.Remove(especialidade);
+        //     await contexto.SaveChangesAsync();
+        //     return Results.NoContent();
+        // }).WithTags("Especialidade").WithOpenApi();
         app.MapDelete("/especialidade/{id}", async ([FromServices] EspecialidadeConverter converter, [FromServices] FreelandoContext contexto, Guid id) =>
         {
-            var especialidade = await contexto.Especialidades.FindAsync(id);
-            if (especialidade == null)
+            using (var transaction = await contexto.Database.BeginTransactionAsync())
             {
-                return Results.NotFound();
+                try
+                {
+                    var especialidade = await contexto.Especialidades.FindAsync(id);
+                    if (especialidade == null)
+                    {
+                        return Results.NotFound();
+                    }
+                    contexto.Especialidades.Remove(especialidade);
+                    await contexto.SaveChangesAsync();
+                    transaction.Commit();
+                    return Results.NoContent();
+
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return Results.BadRequest(ex.Message);
+                }
             }
-            contexto.Especialidades.Remove(especialidade);
-            await contexto.SaveChangesAsync();
-            return Results.NoContent();
         }).WithTags("Especialidade").WithOpenApi();
     }
 }
