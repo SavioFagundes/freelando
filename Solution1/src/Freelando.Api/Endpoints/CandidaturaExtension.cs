@@ -41,6 +41,18 @@
              await contexto.SaveChangesAsync();
              return Results.Ok(candidatura);
          }).WithTags("Candidatura").WithOpenApi();
+
+         app.MapDelete("/candidatura/{id}", async ([FromServices] CandidaturaConverter converter, [FromServices] FreelandoContext contexto, Guid id) =>
+         {
+             var candidatura = await contexto.Candidaturas.FindAsync(id);
+             if (candidatura == null)
+             {
+                 return Results.NotFound();
+             }
+             contexto.Candidaturas.Remove(candidatura);
+             await contexto.SaveChangesAsync();
+             return Results.NoContent();
+         }).WithTags("Candidatura").WithOpenApi();
      }
  
  }

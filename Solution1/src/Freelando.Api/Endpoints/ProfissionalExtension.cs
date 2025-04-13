@@ -39,5 +39,17 @@
              await contexto.SaveChangesAsync();
              return Results.Ok(profissional);
          }).WithTags("Profissional").WithOpenApi();
+
+         app.MapDelete("/profissional/{id}", async ([FromServices] ProfissionalConverter converter, [FromServices] FreelandoContext contexto, Guid id) =>
+         {
+             var profissional = await contexto.Profissionais.FindAsync(id);
+             if (profissional == null)
+             {
+                 return Results.NotFound();
+             }
+             contexto.Profissionais.Remove(profissional);
+             await contexto.SaveChangesAsync();
+             return Results.NoContent();
+         }).WithTags("Profissional").WithOpenApi();
      }
  }
