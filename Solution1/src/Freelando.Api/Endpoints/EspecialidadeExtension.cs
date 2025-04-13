@@ -19,6 +19,11 @@ public static class EspecialidadeExtension
         app.MapPost("/especialidades", async ([FromServices] EspecialidadeConverter converter, [FromServices] FreelandoContext contexto, EspecialidadeRequest especialidadeRequest) =>
         {
             var especialidade = converter.RequestToEntity(especialidadeRequest);
+            Func<Especialidade, bool> validarDescricao = especialidade => !string.IsNullOrWhiteSpace(especialidade.Descricao) && char.IsUpper(especialidade.Descricao[0]);
+            if(!validarDescricao(especialidade) )
+            {
+                return Results.BadRequest("A descrição da especialidade deve começar com uma letra maiúscula e não pode ser vazia.");
+            }
             await contexto.Especialidades.AddAsync(especialidade);
             await contexto.SaveChangesAsync();
             return Results.Created($"/especialidade/{especialidade.Id}", especialidade);
